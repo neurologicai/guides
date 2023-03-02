@@ -291,4 +291,4 @@ end
 def foo
   @foo ||= calculate_expensive_thing
 end
-`
+```
