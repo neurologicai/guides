@@ -301,7 +301,6 @@ def foo
 end
 ```
 
-
 # Coleções
 
 ## `%w`
