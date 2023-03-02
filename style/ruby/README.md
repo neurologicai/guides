@@ -16,6 +16,14 @@ Este guia de estilo Ruby recomenda as melhores práticas para que os programador
   - Capitalização
   - Variável de instância memorizada
 
+- [Coleções](#coleções)
+  - `%w`
+  - `%i`
+  - Hashes de várias linhas
+  - Sem vírgula à direita do Array
+  - Alinhamento de Arrays em Múltiplas Linhas
+  - Símbolos como Chaves
+  - Sintaxe de dois pontos em hash em vez de "foguete" (`=>`)
 ---------------------------------------------
 
 # Formatação e espaçamento
@@ -291,4 +299,116 @@ end
 def foo
   @foo ||= calculate_expensive_thing
 end
-`
+```
+
+
+# Coleções
+
+## `%w`
+
+Prefira `%w` à sintaxe de array literal quando precisar de um array de palavras (strings não vazias sem espaços e caracteres especiais). Aplique esta regra apenas a arrays com dois ou mais elementos.
+
+```ruby
+# ruim
+STATES = ['draft', 'open', 'closed']
+
+# bom
+STATES = %w[draft open closed]
+```
+
+## `%i`
+
+Prefira `%i` à sintaxe de array literal quando precisar de um array de símbolos (e não precisar manter compatibilidade com Ruby 1.9). Aplique esta regra apenas a arrays com dois ou mais elementos.
+
+```ruby
+# ruim
+STATES = [:draft, :open, :closed]
+
+# bom
+STATES = %i[draft open closed]
+```
+
+## Hashes de várias linhas
+
+Use hashes de várias linhas quando tornar o código mais legível e use vírgulas à direita para garantir que as alterações de parâmetro não causem linhas de comparação estranhas quando a lógica não foi alterada.
+
+```ruby
+hash = {
+  protocol: 'https',
+  only_path: false,
+  controller: :users,
+  action: :set_password,
+  redirect: @redirect_url,
+  secret: @secret,
+}
+```
+
+## Sem vírgula à direita do Array
+
+Evite vírgula após o último item de um Array ou Hash literal, especialmente quando os itens não estiverem em linhas separadas.
+
+```ruby
+# ruim - é mais fácil de mover/adicionar/remover itens, mas não é indicado
+VALUES = [
+           1001,
+           2020,
+           3333,
+         ]
+
+# ruim
+VALUES = [1001, 2020, 3333, ]
+
+# bom
+VALUES = [1001, 2020, 3333]
+```
+
+## Alinhamento de Arrays em Múltiplas Linhas
+
+Alinhar os elementos de literais de arrays que abrangem várias linhas.
+
+```ruby
+# ruim - recuo simples
+menu_item = %w[Spam Spam Spam Spam Spam Spam Spam Spam
+  Baked beans Spam Spam Spam Spam Spam]
+
+# bom
+menu_item = %w[
+  Spam Spam Spam Spam Spam Spam Spam Spam
+  Baked beans Spam Spam Spam Spam Spam
+]
+
+# bom
+menu_item =
+  %w[Spam Spam Spam Spam Spam Spam Spam Spam
+     Baked beans Spam Spam Spam Spam Spam]
+```
+
+## Símbolos como Chaves
+
+Preferir símbolos em vez de strings como chaves de hash.
+
+```ruby
+# ruim
+hash = { 'one' => 1, 'two' => 2, 'three' => 3 }
+
+# bom
+hash = { one: 1, two: 2, three: 3 }
+```
+
+## Sintaxe de dois pontos em hash em vez de "foguete" (`=>`)
+
+Preferir a sintaxe de hashcolon para definição de hashes quando cada chave é um símbolo. Use a sintaxe de hashrocket se pelo menos uma chave não for um símbolo.
+
+```ruby
+# ruim
+hash = { 'one' => 1, 'two' => 2, 'three' => 3 }
+
+# ruim
+hash = { twenty: 20, "twenty-one" => 21 }
+
+# bom
+hash = { one: 1, two: 2, three: 3 }
+
+# também é bom, os símbolos não podem usar hífens
+hash = { "twenty" => 20, "twenty-one" => 21 }
+```
