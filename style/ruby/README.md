@@ -24,6 +24,19 @@ Este guia de estilo Ruby recomenda as melhores práticas para que os programador
   - Alinhamento de Arrays em Múltiplas Linhas
   - Símbolos como Chaves
   - Sintaxe de dois pontos em hash em vez de "foguete" (`=>`)
+
+- [Operadores e Fluxo de Controle](#operadores-e-fluxo-de-controle)
+  - Não use `and` ou `or`
+  - Não deve haver espaço depois do `!` (beng) _ponto de exclamação_
+  - Dupla Negação
+  - Operador ternário (`?:`) vs `if`
+  - `case` ao invés de `if-elsif`
+  - Retornando Resultado do `if/case`
+  - `unless` em vez de `if`
+  - Não use o `unless` com o `else`
+  - Loop Infinito
+  - Evite o `return`
+
 ---------------------------------------------
 
 # Formatação e espaçamento
@@ -410,4 +423,240 @@ hash = { one: 1, two: 2, three: 3 }
 
 # também é bom, os símbolos não podem usar hífens
 hash = { "twenty" => 20, "twenty-one" => 21 }
+```
+
+# Operadores e Fluxo de Controle
+
+## Não use `and` ou `or`
+`and` e `or` apesar de funcionar, evite usa-las. Elas não são um sinônimo dos operadores `&&` e `||`, então não devem ser usadas dessa maneira. Para expressões booleanas, use **sempre** `&&` e `||`.
+
+```ruby
+# ruim
+# e/ou em condições (sua precedência é baixa, pode produzir resultado inesperado)
+if got_needed_arguments and arguments_valid
+  # ...body omitted
+end
+
+# no cálculo da expressão lógica
+ok = got_needed_arguments and arguments_valid
+
+# bom
+# &&/|| em condicionais
+if got_needed_arguments && arguments_valid
+  # ...body omitted
+end
+# no cálculo da expressão lógica
+ok = got_needed_arguments && arguments_valid
+
+```
+
+## Não deve haver espaço depois do `!`
+
+Sem espaço após `!`.
+
+```ruby
+#ruim
+# Verifica se o array não está vazio
+if ! array.empty?
+  puts "O array tem #{array.size} elementos"
+end
+
+# bom
+# Verifica se o array não está vazio
+if !array.empty?
+  puts "O array tem #{array.size} elementos"
+end
+
+```
+
+## Dupla Negação
+
+Evite o uso de `!!`.
+
+`!!` converte um valor para booleano, mas você não precisa dessa conversão explícita na condição de uma expressão de controle; usá-la só torna sua intenção mais complexa. Se você quer fazer uma verificação de `nil`, use `nil?` em vez disso.
+
+```ruby
+# ruim
+x = 'test'
+# cheque nulo obscuro
+if !!x
+  # body omitted
+end
+
+# bom
+x = 'test'
+if x
+  # body omitted
+end
+```
+
+## Operador ternário (`?:`) vs `if`
+
+Prefira o operador ternário (`?:`) sobre as construções `if/then/else/end`. É mais comum e obviamente mais conciso.
+
+`condição ? expressão_se_verdadeira : expressão_se_falsa`
+
+Aqui está um exemplo de como usar o operador ternário para determinar se um número é par ou ímpar:
+
+```ruby
+# ruim
+if num % 2 == 0
+  "par"
+else
+  "ímpar"
+end
+
+# O mesmo exemplo usando operador ternário:
+
+# bom
+num % 2 == 0 ? "par" : "ímpar"
+
+```
+
+## `case` ao invés de `if-elsif`
+
+Prefira o uso de `case` ao invés de `if-elsif` quando o valor comparado é o mesmo em cada cláusula.
+
+```ruby
+# ruim
+if status == :active
+  perform_action
+elsif status == :inactive || status == :hibernating
+  check_timeout
+else
+  final_action
+end
+
+# bom
+case status
+when :active
+  perform_action
+when :inactive, :hibernating
+  check_timeout
+else
+  final_action
+end
+```
+## Retornando Resultado do `if/case`
+
+Aproveite o fato de que if e case são expressões que retornam um resultado.
+
+```ruby
+# ruim
+if condition
+  result = x
+else
+  result = y
+end
+
+# bom
+result = if condition
+           x
+         else
+           y
+         end
+
+# ruim
+case x
+when 1
+  result = "x is equal to 1"
+when 2
+  result = "x is equal to 2"
+when 3
+  result = "x is equal to 3"
+else
+  result = "x is not 1, 2, or 3"
+end
+
+# bom
+result = case x
+         when 1
+          "x is equal to 1"
+         when 2
+          "x is equal to 2"
+         when 3
+          "x is equal to 3"
+         else
+          "x is not 1, 2, or 3"
+         end
+```
+
+## `unless` em vez de `if`
+
+Preferir `unless` em vez de `if` para condições negativas (ou fluxo de controle `||`).
+
+```ruby
+# ruim
+do_something if !some_condition
+
+# ruim
+do_something if not some_condition
+
+# ruim
+if !x.nil? && !x.empty?
+
+# bom
+do_something unless some_condition
+
+# bom
+unless x.nil? || x.empty?
+
+# outra boa opçao
+some_condition || do_something
+
+```
+
+## Não use o `unless` com o `else`
+
+Não use o unless com o else. Reescreva esses casos com o caso positivo primeiro.
+
+```ruby
+# ruim
+unless success?
+  puts 'failure'
+else
+  puts 'success'
+end
+
+# bom
+if success?
+  puts 'success'
+else
+  puts 'failure'
+end
+```
+## Loop Infinito
+
+Use Kernel#loop ao invés de while/until quando você precisa de um loop infinito.
+
+```ruby
+# ruim
+while true
+  do_something
+end
+
+until false
+  do_something
+end
+
+# bom
+loop do
+  do_something
+end
+```
+
+## Evite `return`
+
+Evite o `return` onde não for necessário para o fluxo de controle.
+
+```ruby
+# ruim
+def some_method(some_arr)
+  return some_arr.size
+end
+
+# bom
+def some_method(some_arr)
+  some_arr.size
+end
 ```
