@@ -720,7 +720,7 @@ name = 'Bozhidar'
 
 name = "De'Andre"
 
-my_string = 'This is "My String"!!!'
+my_string = 'This is "My String"!!!'
 
 ```
 
