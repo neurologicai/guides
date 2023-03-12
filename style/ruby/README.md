@@ -342,21 +342,22 @@ hash = {
 }
 ```
 
-## Sem vírgula à direita do Array
+## Com vírgula à direita do Array
 
-Evite vírgula após o último item de um Array ou Hash literal, especialmente quando os itens não estiverem em linhas separadas.
+Por vírgula após o último item de um Array ou Hash literal, especialmente quando os itens estiverem em linhas separadas.
+
+Quando forem de uma unica linha, não usar a virgula.
 
 ```ruby
-# ruim - é mais fácil de mover/adicionar/remover itens, mas não é indicado
+# ruim
+VALUES = [1001, 2020, 3333, ]
+
+# bom - é mais fácil de mover/adicionar/remover itens
 VALUES = [
            1001,
            2020,
            3333,
          ]
-
-# ruim
-VALUES = [1001, 2020, 3333, ]
-
 # bom
 VALUES = [1001, 2020, 3333]
 ```
@@ -409,5 +410,5 @@ hash = { twenty: 20, "twenty-one" => 21 }
 hash = { one: 1, two: 2, three: 3 }
 
 # também é bom, os símbolos não podem usar hífens
-hash = { "twenty" => 20, "twenty-one" => 21 }
+hash = { twenty: 20, twenty_one: 21 }
 ```
