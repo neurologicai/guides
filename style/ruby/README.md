@@ -352,12 +352,20 @@ Quando forem de uma unica linha, não usar a virgula.
 # ruim
 VALUES = [1001, 2020, 3333, ]
 
+# ruim
+VALUES = [
+           1001,
+           2020,
+           3333
+         ]
+
 # bom - é mais fácil de mover/adicionar/remover itens
 VALUES = [
            1001,
            2020,
            3333,
          ]
+
 # bom
 VALUES = [1001, 2020, 3333]
 ```
