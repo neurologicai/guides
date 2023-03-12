@@ -765,7 +765,7 @@ else
   calc_something_else
 end
 
-# bom - é evidente o que está acontecendo
+# ruim
 kind = case year
        when 1850..1889 then 'Blues'
        when 1890..1909 then 'Ragtime'
