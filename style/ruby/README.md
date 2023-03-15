@@ -65,6 +65,16 @@ Este guia de estilo Ruby recomenda as melhores práticas para que os programador
   - Métodos de uma linha
   - Não use parênteses
 
+- [Classes e Modulos](#classes-e-modulos)
+  - Consistência de Classes
+  - Definição de Namespace
+  - Indentação de `public`/`private`/`protected`
+  - Evite o uso de variáveis de classe (`@@`)
+  - Métodos de Classe `def self`
+  - Classes em uma única linha
+  - Arquivos de Classes
+
+
 - [Outros](#outros)
   - Evite o uso do `self` onde não for necessário
 
@@ -1130,6 +1140,188 @@ end
 # bom
 def some_method_with_parameters(param1, param2)
   # body omitted
+end
+```
+
+# Classes e Modulos
+## Consistência nas classes
+
+Use uma estrutura consistente em suas definições de classe.
+
+```ruby
+class Person
+  # Estenda (extend) e inclua (include) vêm primeiro
+  extend SomeModule
+  include AnotherModule
+
+  # Classes internas (StandardError)
+  CustomError = Class.new(StandardError)
+
+  # Constantes são as próximas
+  SOME_CONSTANT = 20
+
+  # Em seguida, temos atributos (se houver)
+  attr_reader :name
+
+  # Seguidos por validaçõe (se houver)
+  validates :name
+
+  # Métodos de classe públicos vêm em seguida
+  def self.some_method
+  end
+
+  # Inicialização (initialize) vem entre métodos de classe e outros métodos de instância
+  def initialize
+  end
+
+  # Seguido por outros métodos de instância públicos
+  def some_method
+  end
+
+  # Métodos protegidos (protected) e privados (private) são agrupados no final.
+  protected
+
+  def some_protected_method
+  end
+
+  private
+
+  def some_private_method
+  end
+end
+```
+
+## Definição de Namespace
+
+Defina (e reabra) classes e módulos com namespace usando a aninhamento explícito.
+
+```ruby
+# ruim
+class Utilities::Store
+  # ...
+end
+
+# bom
+module Utilities
+  class WaitingList
+    # ...
+  end
+end
+```
+
+## Indentação de `public`/`private`/`protected`
+
+ Identar os métodos públicos, protegidos e privados tanto quanto as definições de métodos que se aplicam. Deixe uma linha em branco acima do modificador de visibilidade e uma linha em branco abaixo para enfatizar que se aplica a todos os métodos abaixo dele.
+
+```ruby
+# bom
+class SomeClass
+  def public_method
+    # some code
+  end
+
+  def public_method_two
+    # some code
+  end
+
+  private
+
+  def private_method
+    # some code
+  end
+
+  def another_private_method
+    # some code
+  end
+end
+```
+
+## Evite o uso de variáveis de classe (`@@`)
+
+Evite o uso de variáveis de classe (`@@`) devido ao seu comportamento "ruim" em relação à herança.
+
+```ruby
+class Parent
+  @@class_var = 'parent'
+
+  def self.print_class_var
+    puts @@class_var
+  end
+end
+
+class Child < Parent
+  @@class_var = 'child'
+end
+
+Parent.print_class_var # => will print "child"
+```
+
+## Métodos de Classe `def self`
+
+Use self.method para definir métodos de classe. Isso torna o código mais fácil de ser refatorado, já que o nome da classe não é repetido.
+
+```ruby
+class TestClass
+  # ruim
+  def TestClass.some_method
+    # body omitted
+  end
+
+  # bom
+  def self.some_other_method
+    # body omitted
+  end
+end
+```
+
+## Classes em uma única linha
+
+Prefira um formato de linha única, para definições de classe sem corpo. É mais fácil de ler, entender e modificar.
+
+```ruby
+# bom
+class FooError < StandardError; end
+```
+
+## Arquivos de Classes
+
+Não aninhe classes de várias linhas dentro de outras classes. Tente ter essas classes aninhadas cada uma em seu próprio arquivo em uma pasta nomeada como a classe contenedora.
+
+```ruby
+# ruim
+
+# foo.rb
+class Foo
+  class Bar
+    # 30 methods inside
+  end
+
+  class Car
+    # 20 methods inside
+  end
+
+  # 30 methods inside
+end
+
+# bom
+
+# foo.rb
+class Foo
+  # 30 methods inside
+end
+
+# foo/bar.rb
+class Foo
+  class Bar
+    # 30 methods inside
+  end
+end
+
+# foo/car.rb
+class Foo
+  class Car
+    # 20 methods inside
+  end
 end
 ```
 
