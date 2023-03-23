@@ -687,18 +687,27 @@ end
 
 ## Concatenação de strings
 
-Evite usar `String#+` quando precisar construir grandes blocos de dados. Em vez disso, use `String#<<`. A concatenação modifica a instância de string no local e é sempre mais rápida que `String#+`, que cria vários novos objetos de string.
+Como usamos por padrão nos arquivos o comentário mágico `#frozen_string_literal: true`, 
+que informa ao Ruby que todas as strings literais no arquivo estão implicitamente congeladas,
+como se tivessem sido chamado `#freeze` em cada uma delas. Logo, se uma string literal for definida em um arquivo
+com este comentário e você chamar um método nessa string que a modifique-a, como `String#<<`, você obterá
+`RuntimeError: can't modify frozen String`.
+
+Assim, quando precisar construir grandes blocos de dados em arquivo com o método mágico `frozen_string_literal`,
+use sempre`String#+`.
 
 ```ruby
-# ruim
-html = ''
-html += '<h1>Page title</h1>'
+#frozen_string_literal: true
+
+# bom
+html = ""
+html += "<h1>Page title</h1>"
 
 paragraphs.each do |paragraph|
   html += "<p>#{paragraph}</p>"
 end
 
-# bom e mais performatico
+# Gera RuntimeError
 html = ''
 html << '<h1>Page title</h1>'
 
