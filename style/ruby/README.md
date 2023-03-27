@@ -722,24 +722,27 @@ email_with_name = "#{user.name} <#{user.email}>"
 email_with_name = format('%s <%s>', user.name, user.email)
 ```
 
-## Quotes
+## Quotes/Aspas
 
-Prefira strings com aspas simples quando não precisar de interpolação de strings ou símbolos especiais como `\t`, `\n`, `'`, etc.
+Prefira strings com aspas duplas.
+Use aspas simples, quando necessário indicar ortograficamente que se refere a citação dentro de citação no texto renderizado.
+Caso contrário, também pode-se escapar a aspa dupla.
 
 ```ruby
 # ruim
-name = "Bozhidar"
-
-name = 'De\'Andre'
-
-my_string = "This is \"My String\"!!!"
-
-# bom
 name = 'Bozhidar'
 
-name = "De'Andre"
+name = 'De "Andre" da Silva'
 
-my_string = 'This is "My String"!!!'
+
+# bom
+name = "Bozhidar"
+
+name = "De 'Andre' da Silva"
+
+special = "Retorno de Carro \t \n"
+
+my_string = "This is \"My String\"!!!"
 
 ```
 
